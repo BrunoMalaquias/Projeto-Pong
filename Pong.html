@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+
+
+<canvas id="myCanvas" width="800" height="600" style="background-color:black";>
+Your browser does not support the HTML canvas tag.</canvas>
+
+
+<div class="a"  id="placar1"></div>
+<div class="b"  id="placar2"></div>
+
+
+<audio src="sons\raquetada.mp3" preload="auto" id="raquetada"</audio>
+<audio src="sons\ponto.mp3" preload="auto" id="ponto"</audio>
+<audio src="sons\Kalimba.mp3" preload="auto" id="trilha" controls loop </audio>
+
+
+<script>
+var somTrilha = document.getElementById("trilha");
+
+var somRaquetada = document.getElementById("raquetada");
+var somPonto = document.getElementById("ponto");
+
+var c = document.getElementById("myCanvas");
+var ctx = c.getContext("2d");
+
+
+var xBolinha = 400;
+var yBolinha = 230;
+
+var placar1 = 0;
+var placar2 = 0;
+
+var xRaqueteInicial = 10;
+var yRaqueteInicial = 230;
+
+var xRaqueteOponente = 770;
+var yRaqueteOponente = 230;
+
+var colidiu = false;
+var colidiu2 = false;
+
+var vaiVoltax = false;
+var vaiVoltay = false
+
+setInterval(inicioJogo, 60);
+function inicioJogo(){
+	somTrilha.play();
+	ctx.clearRect(0, 0, 800, 600);
+	criaPlacar();
+	//criaPlacar();
+	criarRaquete(xRaqueteInicial,yRaqueteInicial); // posicao x e y da raquete
+	criarRaquete(xRaqueteOponente,yRaqueteOponente);
+	//criarBordaPlacar(120,0,150,30);
+	criarBolinha();
+	movimentarBolinhaX();
+	movimentarBolinhaY();
+	//document.getElementById("placar1").innerHTML = "placar11: " + placar1;
+	//document.getElementById("placar2").innerHTML = "placar22: " + placar2;
+	colisao();
+ 	colisao2();
+}
+
+
+function colisao(){
+	
+	if (xRaqueteInicial + 10 == xBolinha-10) {
+		//alert("xbolinha1: " + xBolinha);
+		if (yRaqueteInicial <= yBolinha){
+			//alert("xbolinha2: " + xBolinha);
+			if (yRaqueteInicial + 80 >= yBolinha){
+				//alert("xbolinha3: " + xBolinha);
+ 				colidiu = true;	
+ 				somRaquetada.play();
+			}
+			
+		}
+
+ 	}
+
+	if(colidiu){
+		xBolinha += 10;
+	}
+  
+}
+
+function colisao2(){
+
+	if (xRaqueteOponente + 10 == xBolinha ) { // xRaqueteOponente = 770
+		if (yRaqueteOponente <= yBolinha){
+						
+			if (yRaqueteOponente + 80 >= yBolinha){
+				//alert("xbolinha: " + xBolinha + "\nxRaqueteOponente: " + xRaqueteOponente + "\nyBolinha: " + yBolinha + "\n yRaqueteOponente: " + yRaqueteOponente);
+ 				colidiu2 = true;
+ 				somRaquetada.play();	
+			}
+			
+		}
+
+ 	}
+
+	if(colidiu2){
+		xBolinha -= 20;
+	}
+  
+}
+
+
+movimentaRaquete();
+function movimentaRaquete(){
+	document.addEventListener('keydown', 
+		function(event) {
+
+			if(event.keyCode == 65) {
+				yRaqueteInicial = yRaqueteInicial - 10;
+			}
+
+	    	if(event.keyCode == 90) {
+				yRaqueteInicial = yRaqueteInicial + 10;
+			}
+	
+	});
+}
+
+movimentaRaqueteOponente();
+function movimentaRaqueteOponente(){
+	document.addEventListener('keydown', 
+		function(event) {
+
+			if(event.keyCode == 38) {
+				yRaqueteOponente = yRaqueteOponente - 10;
+			}
+
+	    	if(event.keyCode == 40) {
+				yRaqueteOponente = yRaqueteOponente + 10;
+			}
+	
+	});
+}
+
+
+//setInterval(movimentarBolinha, 50);
+//setInterval(criarRaquete(yRaqueteInicial,230);, 90);
+
+function movimentarBolinhaX(){
+	
+	if(xBolinha == 790 || colidiu2){
+		if(colidiu2==false){
+			somPonto.play();
+			placar1 = placar1 + 1;
+		}
+		vaiVoltax = true;
+		colidiu2 = false;
+		}
+
+	if (xBolinha == 10 || colidiu) {
+		if(colidiu == false){
+			somPonto.play();
+			placar2 = placar2 + 1;
+		}
+		vaiVoltax = false;
+		colidiu = false;
+	}
+
+if(vaiVoltax){
+		xBolinha -= 10;
+		//yBolinha -= 10;
+	}else{
+		xBolinha += 10;
+		//yBolinha +=10;
+	}
+
+}
+
+function movimentarBolinhaY(){
+		
+	if (yBolinha == 590 || colidiu2) {
+		if(colidiu2 == false){
+			//somPonto.play();
+		}
+		vaiVoltay = true;
+		colidiu2 = false;
+	}
+ 
+	if (yBolinha == 20 || colidiu){
+		if(colidiu == false){
+			//somPonto.play();
+		}
+		vaiVoltay = false;
+		colidiu = false;
+	}
+
+if(vaiVoltay){
+		yBolinha -= 10;
+		//yBolinha -= 10;
+	}else{
+		yBolinha += 10;
+		//yBolinha +=10;
+	}
+
+
+}	
+function criarRaquete(x,y){
+	ctx.beginPath();
+	ctx.rect(x,y, 20, 80);
+	ctx.fillStyle = "white";
+	ctx.fill();
+}
+
+function criarBordaPlacar(x,y,c,a){
+	
+}
+
+function criarBolinha(){
+	ctx.beginPath();
+	ctx.arc(xBolinha,yBolinha,10,0,2*Math.PI);
+	ctx.fillStyle = "white";
+	ctx.fill();	
+}
+
+function criaPlacar(x,y,c,a){
+	ctx.font = "25px Arial bold";
+	ctx.textAlign = "start";    
+	ctx.strokeStyle = "white";  
+	ctx.fillText("Jogador I: " + placar1, 160, 20); 
+
+	//ctx.strokeStyle = "white";
+	//ctx.strokeRect(155,0,100,25);  
+
+	ctx.textAlign = "end";      
+	ctx.fillText("Jogador II: " + placar2, 630, 20);
+}
+
+
+</script>
+
+</body>
+</html>
