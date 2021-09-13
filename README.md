@@ -10,4 +10,4 @@ JOGADOR I:
 
 JOGADOR II:
 	↑ -> para cima;
-	↓ -> para baixo
+	↓ -> para baixo.
